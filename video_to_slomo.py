@@ -76,8 +76,8 @@ def extract_frames(video, outDir):
     else:
         ffmpeg_path = "ffmpeg"
 
-    print('{} -i {} -vsync 0 {}/%06d.png'.format(ffmpeg_path, video, outDir))
-    retn = os.system('{} -i "{}" -vsync 0 {}/%06d.png'.format(ffmpeg_path, video, outDir))
+    print('{} -hwaccel cuda -i {} -vsync 0 {}/%06d.png'.format(ffmpeg_path, video, outDir))
+    retn = os.system('{} -hwaccel cuda -i "{}" -vsync 0 {}/%06d.png'.format(ffmpeg_path, video, outDir))
     if retn:
         error = "Error converting file:{}. Exiting.".format(video)
     return error
@@ -91,8 +91,8 @@ def create_video(dir):
         ffmpeg_path = "ffmpeg"
 
     error = ""
-    print('{} -framerate {} -i {}/%d.png -c:v libx264 -preset slow -crf 23 {}'.format(ffmpeg_path, args.fps, dir, args.output))
-    retn = os.system('{} -framerate {} -i {}/%d.png -c:v libx264 -preset slow -crf 23 {}'.format(ffmpeg_path, args.fps, dir, args.output))
+    print('{} -hwaccel cuda -framerate {} -i {}/%d.png -c:v libx264 -preset slow -crf 23 {}'.format(ffmpeg_path, args.fps, dir, args.output))
+    retn = os.system('{} -hwaccel cuda -framerate {} -i {}/%d.png -c:v libx264 -preset slow -crf 23 {}'.format(ffmpeg_path, args.fps, dir, args.output))
     if retn:
         error = "Error creating output video. Exiting."
     return error
