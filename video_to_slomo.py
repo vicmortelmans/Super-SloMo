@@ -10,6 +10,7 @@ import torchvision.transforms as transforms
 import model
 import dataloader
 import platform
+import uuid
 from tqdm import tqdm
 
 # For parsing commandline arguments
@@ -90,8 +91,8 @@ def create_video(dir):
         ffmpeg_path = "ffmpeg"
 
     error = ""
-    print('{} -r {} -i {}/%d.png -vcodec ffvhuff {}'.format(ffmpeg_path, args.fps, dir, args.output))
-    retn = os.system('{} -r {} -i {}/%d.png -vcodec ffvhuff "{}"'.format(ffmpeg_path, args.fps, dir, args.output))
+    print('{} -framerate {} -i {}/%d.png -c:v libx264 -preset slow -crf 23 {}'.format(ffmpeg_path, args.fps, dir, args.output))
+    retn = os.system('{} -framerate {} -i {}/%d.png -c:v libx264 -preset slow -crf 23 {}'.format(ffmpeg_path, args.fps, dir, args.output))
     if retn:
         error = "Error creating output video. Exiting."
     return error
@@ -106,7 +107,7 @@ def main():
 
     # Create extraction folder and extract frames
     IS_WINDOWS = 'Windows' == platform.system()
-    extractionDir = "tmpSuperSloMo"
+    extractionDir = str(uuid.uuid4())
     if not IS_WINDOWS:
         # Assuming UNIX-like system where "." indicates hidden directories
         extractionDir = "." + extractionDir
